@@ -72,25 +72,25 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $p)
+    public function update(Request $request, Product $product)
     {
-        error_log($request->category_id);
+        $product->category_id=$request->category_id;
+        $product->user_id=$request->user()->id;
 
-        $p->category_id=$request->category_id;
-        $p->user_id=Auth::id();
+        $product->name=$request->name;
+        $product->description=$request->description;
+        $product->price= $request->price;
 
-        $p->name=$request->name;
-        $p->description=$request->description;
-        $p->price= $request->price;
-        $p->photo= $request->photo;
-        $p->stock= $request->stock;
-        
-        $p->save();
+        //$product->photo= "/storage/".$request->file('photo')->store("photos");
+
+        $product->stock= $request->stock;
+
+        $product->save();
 
         return response()->json([
-            'status' => '200',
-            'message' => 'Product modified',
-            'product'=>$p
+            'status' => '201',
+            'message' => 'Product created',
+            'product'=>$product
         ]);
     }
 
@@ -106,5 +106,13 @@ class ProductController extends Controller
         return response()->json([
             'status' => '204'
         ]);
+    }
+
+    public function updatePic(Request $request,$product)
+    {
+        $product=Product::findOrFail($product);
+        $product->photo= "/storage/".$request->file('photo')->store("photos");
+        $product->save();
+        return $product;
     }
 }
