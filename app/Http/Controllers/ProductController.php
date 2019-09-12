@@ -19,7 +19,7 @@ class ProductController extends Controller
         foreach ($products as $product) {
             $product->photo=url($product->photo);
         }
-        return $products;
+        return $products->load('user')->load('category');;
     }
 
     /**
@@ -74,6 +74,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $p)
     {
+        error_log($request->category_id);
 
         $p->category_id=$request->category_id;
         $p->user_id=Auth::id();
@@ -83,7 +84,7 @@ class ProductController extends Controller
         $p->price= $request->price;
         $p->photo= $request->photo;
         $p->stock= $request->stock;
-
+        
         $p->save();
 
         return response()->json([
