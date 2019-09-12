@@ -80,4 +80,9 @@ class CategoryController extends Controller
         ]);
 
     }
+
+    public function products($id)
+    {
+      return Category::findOrFail($id)->products;
+    }
 }
