@@ -60,7 +60,7 @@ class ProductController extends Controller
     public function show(Product $product)
     {
         $product->photo=url($product->photo);
-        return $product;
+        return $product->load('user')->load('category');
     }
 
 
