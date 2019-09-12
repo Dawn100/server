@@ -14,17 +14,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $products= Product::all();
+        foreach ($products as $product) {
+            $product->photo=url($product->photo);
+        }
+        return $products;
     }
 
     /**
@@ -35,7 +29,26 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $p=new Product;
+
+        $p->category_id=$request->category_id;
+        $p->user_id=$request->user_id;
+
+        $p->name=$request->name;
+        $p->description=$request->description;
+        $p->price= $request->price;
+
+        $p->photo= "/storage/".$request->file('photo')->store("photos");
+        $p->stock= $request->stock;
+
+        $p->save();
+
+        return response()->json([
+            'status' => '201',
+            'message' => 'Product created',
+            'product'=>$p
+        ]);
+
     }
 
     /**
@@ -46,19 +59,10 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $product->photo=url($product->photo);
+        return $product;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Product  $product
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
@@ -67,9 +71,25 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, Product $p)
     {
-        //
+
+        $p->category_id=$request->category_id;
+        $p->user_id=$request->user_id;
+
+        $p->name=$request->name;
+        $p->description=$request->description;
+        $p->price= $request->price;
+        $p->photo= $request->photo;
+        $p->stock= $request->stock;
+
+        $p->save();
+
+        return response()->json([
+            'status' => '200',
+            'message' => 'Product modified',
+            'product'=>$p
+        ]);
     }
 
     /**
@@ -80,6 +100,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        $product->delete();
+        return response()->json([
+            'status' => '204'
+        ]);
     }
 }
