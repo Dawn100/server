@@ -25,13 +25,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $c = new Category;
-        $c->name=$request->name;
-        $c->save();
-        return response()->json([
-                    'status' => '201',
-                    'message' => 'Category created',
-                    'category'=>$c
+        return Category::create([
+            'name' => $request->name,
         ]);
     }
 

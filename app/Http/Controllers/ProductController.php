@@ -33,7 +33,7 @@ class ProductController extends Controller
         $p=new Product;
 
         $p->category_id=$request->category_id;
-        $p->user_id=Auth::id();
+        $p->user_id=$request->user()->id;
 
         $p->name=$request->name;
         $p->description=$request->description;
