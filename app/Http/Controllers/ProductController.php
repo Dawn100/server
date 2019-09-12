@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -32,7 +33,7 @@ class ProductController extends Controller
         $p=new Product;
 
         $p->category_id=$request->category_id;
-        $p->user_id=$request->user_id;
+        $p->user_id=Auth::id();
 
         $p->name=$request->name;
         $p->description=$request->description;
@@ -75,7 +76,7 @@ class ProductController extends Controller
     {
 
         $p->category_id=$request->category_id;
-        $p->user_id=$request->user_id;
+        $p->user_id=Auth::id();
 
         $p->name=$request->name;
         $p->description=$request->description;
