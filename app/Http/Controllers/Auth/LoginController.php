@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -35,5 +39,22 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function apiLogin(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return response()->json([
+                'message'=>"Login Success",
+                'api_token'=>Auth::user()->api_token
+            ],200);
+        }
+        else{
+            return response()->json([
+                'message'=>'Email or Password is incorrect'
+            ], 404); // Status code here
+        }
     }
 }
