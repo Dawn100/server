@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -42,19 +43,28 @@ class LoginController extends Controller
     }
 
     public function apiLogin(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+    {	
+        
+        error_log("email ".$request['email']);
+
+        $credentials = [
+            'email' => $request['email'],
+            'password' => $request['password'],
+        ];
+
 
         if (Auth::attempt($credentials)) {
+            error_log("SUCCESS");
             return response()->json([
                 'message'=>"Login Success",
                 'api_token'=>Auth::user()->api_token
             ],200);
         }
         else{
+            error_log("FAIL");
             return response()->json([
                 'message'=>'Email or Password is incorrect'
-            ], 404); // Status code here
+            ], 200); // Status code here
         }
     }
 }

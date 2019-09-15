@@ -18,3 +18,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post('depth',function (Request $request) {
+    error_log($request);
+    return response()->json([
+        'message'=>'HIT'
+    ]);
+})->middleware('cors');
