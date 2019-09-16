@@ -18,8 +18,9 @@ class ProductController extends Controller
         $products= Product::all();
         foreach ($products as $product) {
             $product->photo=url($product->photo);
+            $product->description=substr($product->description,0,50);
         }
-        return $products->load('user')->load('category');;
+        return $products->load('user')->load('category');
     }
 
     /**
@@ -30,6 +31,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        
         $p=new Product;
 
         $p->category_id=$request->category_id;
@@ -43,7 +45,7 @@ class ProductController extends Controller
         $p->stock= $request->stock;
 
         $p->save();
-
+        error_log($p);
         return response()->json([
             'status' => '201',
             'message' => 'Product created',
@@ -74,6 +76,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        // error_log($request);
+        
         $product->category_id=$request->category_id;
         $product->user_id=$request->user()->id;
 
@@ -86,10 +90,10 @@ class ProductController extends Controller
         $product->stock= $request->stock;
 
         $product->save();
-
+        // error_log($product);
         return response()->json([
             'status' => '201',
-            'message' => 'Product created',
+            'message' => 'Product updated',
             'product'=>$product
         ]);
     }
@@ -102,9 +106,11 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        error_log($product);
         $product->delete();
         return response()->json([
-            'status' => '204'
+            'status' => '204',
+            'message'=>'deleted'
         ]);
     }
 
@@ -113,6 +119,9 @@ class ProductController extends Controller
         $product=Product::findOrFail($product);
         $product->photo= "/storage/".$request->file('photo')->store("photos");
         $product->save();
-        return $product;
+        return response()->json([
+            'message' => 'Photo Updated',
+            'new_url'=>$product->photo,
+        ]);
     }
 }
