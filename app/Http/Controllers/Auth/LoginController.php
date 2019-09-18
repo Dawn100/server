@@ -36,13 +36,15 @@ class LoginController extends Controller
             error_log("Login SUCCESS");
             return response()->json([
                 'message'=>"Login Success",
+		'login_status'=>1,
                 'api_token'=>Auth::user()->api_token
             ],200);
         }
         else{
             error_log("Login FAIL");
             return response()->json([
-                'message'=>'Email or Password is incorrect'
+                'message'=>'Email or Password is incorrect',
+		'login_status'=>0
             ], 200);
         }
     }

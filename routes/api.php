@@ -34,7 +34,7 @@ Route::post('search',function (Request $request)
 Route::post('products/{product}/setphoto','ProductController@updatePic')->middleware('auth:api');
 
 Route::middleware('auth:api')->get('/user/products', function (Request $request) {
-    $products=$request->user()->products;
+    $products=$request->user()->products->load('user')->load('category');
     foreach ($products as $product) {
         $product->photo=url($product->photo);
         $product->description=substr($product->description,0,50);
